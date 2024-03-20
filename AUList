@@ -1,0 +1,59 @@
+#include <iostream>
+#include <stdexcept>
+#include "AUList.h"
+
+// Constructor initializes an empty list by setting its length to 0.
+AUList::AUList() {
+    length = 0;
+}
+
+// Checks if the list is full by comparing the current length to MAXSIZE.
+bool AUList::IsFull() const {
+    return (length == MAXSIZE);
+}
+
+// Returns the number of items currently in the list.
+int AUList::GetLength() const {
+    return length;
+}
+
+// Empties the list by resetting its length to 0.
+void AUList::MakeEmpty() {
+    length = 0;
+}
+
+// Adds a new item to the end of the list. Assumes the list is not full.
+void AUList::PutItem(IrisRecord item) {
+    ListItems[length] = item; // Adds the item at the current length index.
+    length++; // Increments the length to reflect the added item.
+}
+
+// Resets the position used for iterating over the list with GetNextItem.
+void AUList::ResetList() {
+    currentPos = -1; // -1 indicates that the next item will be at index 0.
+}
+
+// Checks if there are more items in the list to access with GetNextItem.
+bool AUList::HasNextItem() {
+    return currentPos < (length - 1);
+}
+
+// Returns the next item in the list and increments the current position.
+IrisRecord AUList::GetNextItem() {
+    currentPos++; // Move to the next item in the list.
+    return ListItems[currentPos]; // Return the item at the new current position.
+}
+
+// Prints each item in the list. Assumes that IrisRecord has publicly accessible fields.
+void AUList::PrintList() {
+    for (int loc = 0; loc < length; loc++) { // Iterate through all items.
+        IrisRecord curItem = ListItems[loc]; // Get the current item.
+        // Print details of the current item, including all IrisRecord fields.
+        std::cout << "Rec " << loc + 1 << ": "
+                  << curItem.sepalLength << ", "
+                  << curItem.sepalWidth << ", "
+                  << curItem.petalLength << ", "
+                  << curItem.petalWidth << ", "
+                  << curItem.species << std::endl;
+    }
+}
