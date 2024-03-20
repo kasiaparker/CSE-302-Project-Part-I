@@ -1,0 +1,41 @@
+#include "AUList.h" // Include the custom AUList class definition
+#include <fstream>  // Include for file input/output operations
+#include <sstream>  // Include for string stream operations
+#include <iostream> // Include for input/output stream operations
+using namespace std;
+
+// Function to convert a CSV file to an AUList of IrisRecords
+AUList csvtoAUList(string csvfile) {
+    AUList retIrisList; // Create an empty AUList for storing Iris records
+    ifstream ReadFile(csvfile); // Open the CSV file for reading
+    string line, curvalue; // Variables to store each line and current value from the file
+    getline(ReadFile, line); // Discard the first line (assumed to contain column names)
+    
+    // Read the file line by line
+    while (getline(ReadFile, line)) {
+        stringstream ss(line); // Use stringstream to parse the line
+        int fielditer = 0; // Counter to track the current field being read
+        IrisRecord newrec; // Create a new IrisRecord to store the current line's data
+        
+        // Parse the line, separating values by commas
+        while (getline(ss, curvalue, ',')) {
+            switch (fielditer) { // Assign the correct field based on the order
+            case 0: newrec.sepalLength = stod(curvalue); break; // Convert string to double and assign
+            case 1: newrec.sepalWidth = stod(curvalue); break;
+            case 2: newrec.petalLength = stod(curvalue); break;
+            case 3: newrec.petalWidth = stod(curvalue); break;
+            case 4: newrec.species = curvalue; break; // Assign string directly
+            }
+            fielditer++; // Move to the next field for the next iteration
+        }
+        retIrisList.PutItem(newrec); // Add the new record to the list
+    }
+    return retIrisList; // Return the populated list
+}
+
+// Main function: expects the name of the CSV file as a command-line argument
+int main(int argc, char** argv) {
+    AUList IrisData = csvtoAUList("iris.csv"); // Convert the CSV file to an AUList
+    IrisData.PrintList(); // Print the list of Iris records to standard output
+    return 0; // Return successful exit code
+}
